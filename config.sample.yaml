@@ -1,0 +1,19 @@
+deploy:
+  username:       user.name@yourcompany.com
+  password:       YourPasswordAndPossiblySecurityToken
+  login_url:      https://login.salesforce.com
+  api_version:    36.0
+  timeout:        120000
+  poll_interval:  5000
+
+visualforce:
+  original_filename: index.vf.html
+  rename_to: AngularApp.page
+  controller_name: AngularAppController
+
+resources:
+  app_resource_name: AngularApp
+  node_module_resource_name: NodeModules
+
+options:
+  debug: true

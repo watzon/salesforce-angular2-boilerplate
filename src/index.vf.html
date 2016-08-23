@@ -1,0 +1,41 @@
+<% if (!local) { %>
+<apex:page controller="<%= controller %>" showHeader="false" standardStylesheets="false" sidebar="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0">
+<% } %>
+<html>
+	<head>
+		<base href="/" />
+		<meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Angular 2 Salesforce Test</title>
+		<script type="text/javascript"> if(!window._sf) window._sf = {} </script>
+		<% if (local) { %>
+			<script type="text/javascript">
+				window.local = true;
+				window._sf.auth = <%= auth %>
+			</script>
+		<% } else { %>
+			<script type="text/javascript">
+	    	window._sf.api = "{!JSENCODE($Api.Session_ID)}";
+				window._sf.node_modules_dir= "<%= node_modules_directory %>";
+				window._sf.app_dir = "<%= app_directory %>";
+			</script>
+		<% } %>
+		<link rel="stylesheet" href="<%= app_directory %>styles/semantic.min.css" media="screen" charset="utf-8" />
+	</head>
+	<body>
+		<app>Loading...</app>
+
+		<script src="<%= node_modules_directory %>core-js/client/shim.min.js"></script>
+    <script src="<%= node_modules_directory %>zone.js/dist/zone.js"></script>
+    <script src="<%= node_modules_directory %>reflect-metadata/Reflect.js"></script>
+    <script src="<%= node_modules_directory %>systemjs/dist/system.src.js"></script>
+    <!-- 2. Configure SystemJS -->
+    <script src="<%= app_directory %>systemjs.config.js"></script>
+    <script>
+      System.import('app').catch(function(err){ console.error(err); });
+    </script>
+	</body>
+</html>
+<% if (!local) { %>
+</apex:page>
+<% } %>

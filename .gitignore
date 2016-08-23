@@ -1,0 +1,9 @@
+.ssh/
+.tmp/
+build/
+config.yaml
+node_modules/
+vendor/
+typings/
+*.sublime-workspace
+*.sublime-project

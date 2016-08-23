@@ -1,0 +1,18 @@
+<h2>Contact Management</h2>
+
+<h3 class="ui dividing header">Select a contact to manage</h3>
+
+<div class="ui four column grid">
+    <div class="column" *ngFor="let c of contacts">
+        <a [routerLink]="['/contactDetail', c.Id]">
+            <div class="ui fluid card" @cardState="c.state" (mouseover)="c.state = 'hovering'" (mouseleave)="c.state = 'normal'">
+                <div class="image">
+                    <img src="http://blog.ramboll.com/fehmarnbelt/wp-content/themes/ramboll2/images/profile-img.jpg">
+                </div>
+                <div class="content">
+                    <a class="header">{{c.Name}}</a>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

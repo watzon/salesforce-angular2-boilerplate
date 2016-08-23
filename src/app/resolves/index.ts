@@ -1,0 +1,1 @@
+export { SalesforceResolver } from './salesforce.resolver';
