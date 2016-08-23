@@ -77,5 +77,5 @@ THE SOFTWARE.
 
 ### Changelog
 
-##### 2016-08-23
-Added this repo to github
+##### [0.1.0] - 2016-08-23
+- Added this repo to github
