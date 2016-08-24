@@ -17,7 +17,7 @@ npm install -g gulp-cli
 
 If everything worked `gulp -v` should give you a version number over 4.
 
-Lastly you will need to copy the `config.sample.yaml` file to `config.yaml` and fill out the pertenent information. It should look like this:
+You will also need to copy the `config.sample.yaml` file to `config.yaml` and fill out the pertenent information. It should look like this:
 
 ```yaml
 deploy:
@@ -41,9 +41,21 @@ options:
   debug: true
 ```
 
+Lastly you will need to generate a private keypair to run the local express server through SSH. In your terminal while in the salesforce-angular2-boilerplate directory run:
+
+```
+openssl req \
+       -newkey rsa:2048 -nodes -keyout ./ssh/domain.key \
+       -x509 -days 365 -out ./ssh/domain.crt
+```
+
+Run though the setup and enter any information you want, it's not important. Finally check that a `.ssh` directory has been created and that it contains a `domain.key` and `domain.crt`.
+
+*Note:* I am not sure how to do this on windows, although I'm fairly sure git-bash has openssl built in.
+
 ### Running the example
 
-This boilerplate comes with a working example of a *contact management application*. To get it running just run the `gulp` command while in the   salesforce-angular2-boilerplate directory. It will open a local server at http://localhost:8080 where you should be able to view the working application. When you're ready to deploy the application and test it in Salesforce just run `gulp deploy` and wait for the application to finish deploying.
+This boilerplate comes with a working example of a *contact management application*. To get it running just run the `gulp` command while in the   salesforce-angular2-boilerplate directory. It will open a local server at https://localhost:8080 where you should be able to view the working application. When you're ready to deploy the application and test it in Salesforce just run `gulp deploy` and wait for the application to finish deploying.
 
 
 ### Contributing
