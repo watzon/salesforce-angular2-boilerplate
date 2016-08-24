@@ -55,7 +55,7 @@ Run though the setup and enter any information you want, it's not important. Fin
 
 ### Running the example
 
-This boilerplate comes with a working example of a *contact management application*. To get it running just run the `gulp` command while in the   salesforce-angular2-boilerplate directory. It will open a local server at https://localhost:8080 where you should be able to view the working application. When you're ready to deploy the application and test it in Salesforce just run `gulp deploy` and wait for the application to finish deploying.
+This boilerplate comes with a working example of a *contact management application*. To get it running just run the `gulp` command while in the   salesforce-angular2-boilerplate directory. It will open a local server at [https://localhost:8080](https://localhost:8080) where you should be able to view the working application. When you're ready to deploy the application and test it in Salesforce just run `gulp deploy` and wait for the application to finish deploying.
 
 
 ### Contributing
