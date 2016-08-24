@@ -8,7 +8,7 @@ Setting up is super easy. First clone or fork this repository to your local mach
 
 You will need [http://nodejs.org](NodeJs) in order to work with this so make sure you have that installed.
 
-Once you're in the salesforce-angular2-boilerplate directory run `npm install`. This project also uses *gulp 4*, so install that:
+Once you're in the salesforce-angular2-boilerplate directory run `npm install`. This project also uses **gulp 4**, so install that:
 
 ```
 npm rm -g gulp
@@ -51,7 +51,7 @@ openssl req \
 
 Run though the setup and enter any information you want, it's not important. Finally check that a `.ssh` directory has been created and that it contains a `domain.key` and `domain.crt`.
 
-*Note:* I am not sure how to do this on windows, although I'm fairly sure git-bash has openssl built in.
+**Note:** I am not sure how to do this on windows, although I'm fairly sure git-bash has openssl built in.
 
 ### Running the example
 
