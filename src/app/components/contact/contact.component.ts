@@ -64,12 +64,14 @@ export class ContactComponent implements OnInit {
                                 FirstName,
                                 LastName,
                                 Title,
-                                Birthdate
+                                Birthdate,
+                                PhotoUrl
                              FROM Contact
                              WHERE Id = '${id}'`;
                 this.sfdc.execute('executeQuery', { query: query })
                     .then((res) => {
                         this.contact = res[0];
+                        this.contact.PhotoUrl = this.sfdc.instanceUrl + this.contact.PhotoUrl;
                         this.editLock = false;
                     });
             });

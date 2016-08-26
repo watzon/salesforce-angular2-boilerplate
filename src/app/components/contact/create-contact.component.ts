@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs/Rx'
 import { Router } from '@angular/router';
 
@@ -14,6 +15,7 @@ export class CreateContactComponent {
 
     private contact: IContact = {};
     private saving: boolean = false;
+    private error: string;
     
     constructor(private sfdc: SalesforceService, private log: LoggerService, private router: Router) {}
 
@@ -28,6 +30,7 @@ export class CreateContactComponent {
                     this.router.navigate(['/contact/view', res[0].Id]);
                 }, (reason) => {
                     this.saving = false;
+                    this.error = reason;
                     this.log.error(reason);
                 });
         }

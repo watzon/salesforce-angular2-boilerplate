@@ -23,6 +23,14 @@ export class SalesforceService {
 	public beforeHook: (controller?: string, method?: string, params?: Object, api?: API) => boolean;
 	public afterHook:  (error?: string, result?: any) => void;
 
+	get instanceUrl(): string {
+		if (this.conn) {
+			return this.conn.instanceUrl;
+		} else {
+			return window.location.origin;
+		}
+	}
+
 	constructor(private _zone: NgZone, private log: LoggerService) {
 		
 	}

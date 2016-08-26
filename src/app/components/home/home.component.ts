@@ -30,11 +30,14 @@ export class HomeComponent implements OnInit {
     constructor(private sfdc: SalesforceService, private log: LoggerService) {}
 
     ngOnInit() {
-        let query = 'SELECT Id, Name, PhotoUrl FROM Contact';
+        let query = 'SELECT Id, Salutation, FirstName, LastName, PhotoUrl FROM Contact';
         this.sfdc.execute('executeQuery', { query: query })
             .then((res) => {
                 this.contacts = res;
-                this.contacts.map((c) => { c.state = 'normal'; });
+                this.contacts.map((c) => {
+                    c.state = 'normal';
+                    c.PhotoUrl = this.sfdc.instanceUrl + c.PhotoUrl;
+                });
             }, (err) => {
                 this.log.error(err);
             });

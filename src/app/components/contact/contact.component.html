@@ -13,7 +13,7 @@
     </div>
     <div class="row" *ngIf="contact">
         <div class="four wide column">
-            <img src="http://blog.ramboll.com/fehmarnbelt/wp-content/themes/ramboll2/images/profile-img.jpg" class="ui fluid rounded image">
+            <img [src]="contact.PhotoUrl" class="ui fluid rounded image">
         </div>
         <div class="twelve wide column">
             <h2 class="ui dividing header">{{contact.Salutation}} {{contact.FirstName}} {{contact.LastName}}</h2>

@@ -7,10 +7,10 @@
         <a [routerLink]="['/contact/view', c.Id]">
             <div class="ui fluid card" [@cardState]="c.state" (mouseover)="c.state = 'hovering'" (mouseleave)="c.state = 'normal'">
                 <div class="image">
-                    <img src="http://blog.ramboll.com/fehmarnbelt/wp-content/themes/ramboll2/images/profile-img.jpg">
+                    <img [src]="c.PhotoUrl">
                 </div>
                 <div class="content">
-                    <a class="header">{{c.Name}}</a>
+                    <a class="header">{{c.Salutation}} {{c.FirstName}} {{c.LastName}}</a>
                 </div>
             </div>
         </a>
