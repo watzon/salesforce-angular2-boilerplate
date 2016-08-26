@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Subscription } from 'rxjs/Rx'
 import { Router } from '@angular/router';
 
@@ -10,7 +10,7 @@ import { SalesforceService, LoggerService } from '../../services/index';
     selector: 'create-contact',
     templateUrl: 'create-contact.component.html'
 })
-export class CreateContactComponent implements OnInit {
+export class CreateContactComponent {
 
     private contact: IContact = {};
     private saving: boolean = false;
