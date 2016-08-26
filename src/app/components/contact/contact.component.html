@@ -1,0 +1,47 @@
+<div class="ui grid">
+    <div class="row">
+        <div class="thirteen wide column">
+            <h1>Contact Detail</h1>
+        </div>
+        <div class="three wide column">
+            <button class="ui fluid teal basic button" (click)="startEdit()" [class.disabled]="editLock" *ngIf="!editing">Edit</button>
+            <div class="ui fluid buttons" *ngIf="editing">
+                <button class="ui green basic button" (click)="saveContact()" [class.disabled]="saving">Save</button>
+                <button class="ui red basic button" (click)="cancelEdit()" [class.disabled]="saving">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="contact">
+        <div class="four wide column">
+            <img src="http://blog.ramboll.com/fehmarnbelt/wp-content/themes/ramboll2/images/profile-img.jpg" class="ui fluid rounded image">
+        </div>
+        <div class="twelve wide column">
+            <h2 class="ui dividing header">{{contact.Salutation}} {{contact.FirstName}} {{contact.LastName}}</h2>
+
+            <div class="detail line divider">
+                <div class="detail label">Salutation:</div>
+                <div class="detail content" [attr.contenteditable]="editing" [(contentEditableModel)]="contact.Salutation">{{contact.Salutation}}</div>
+            </div>
+
+            <div class="detail line divider">
+                <div class="detail label">First Name:</div>
+                <div class="detail content" [attr.contenteditable]="editing" [(contentEditableModel)]="contact.FirstName">{{contact.FirstName}}</div>
+            </div>
+
+            <div class="detail line divider">
+                <div class="detail label">Last Name:</div>
+                <div class="detail content" [attr.contenteditable]="editing" [(contentEditableModel)]="contact.LastName">{{contact.LastName}}</div>
+            </div>
+
+            <div class="detail line divider">
+                <div class="detail label">Title:</div>
+                <div class="detail content" [attr.contenteditable]="editing" [(contentEditableModel)]="contact.Title">{{contact.Title}}</div>
+            </div>
+
+            <div class="detail line divider">
+                <div class="detail label">Birthdate:</div>
+                <div class="detail content" [attr.contenteditable]="editing" [(contentEditableModel)]="contact.Birthdate">{{contact.Birthdate | date:'MM/dd/yyyy'}}</div>
+            </div>
+        </div>
+    </div>
+</div>

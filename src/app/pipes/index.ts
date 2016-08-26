@@ -1,0 +1,1 @@
+export { NewlineToBreakPipe } from './newlineToBreak.pipe';

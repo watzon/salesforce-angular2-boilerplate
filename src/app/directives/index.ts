@@ -1,0 +1,1 @@
+export { ContentEditableModelDirective } from './contentEditableModel.directive';

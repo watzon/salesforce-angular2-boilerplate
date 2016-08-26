@@ -54,7 +54,7 @@ module.exports = function(gulp, config) {
 			'node_modules/zone.js/dist/zone.js',
 			'node_modules/reflect-metadata/Reflect.js',
 			'node_modules/systemjs/dist/system.src.js',
-			'node_modules/jquery/dist/jquery.min.js',
+			'node_modules/moment/moment.js',
 			'!**/testing/**',
 			'!**/testing.*',
 			'!**/*.{md|txt|org|d.ts|js.map}'

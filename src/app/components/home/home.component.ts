@@ -1,8 +1,8 @@
 import { Component, OnInit,Input, trigger, state, style, transition, animate } from '@angular/core';
 import { SalesforceService, LoggerService } from '../../services/index';
-import { Contact } from '../../shared/sobjects';
+import { IContact } from '../../shared/sobjects';
 
-interface ContactCard extends Contact {
+interface ContactCard extends IContact {
     state: string
 }
 
@@ -18,8 +18,8 @@ interface ContactCard extends Contact {
             state('normal', style({
                transform: 'scale(1)'
            })),
-            transition('normal => hovering', animate('300ms ease-in')),
-            transition('hovering => normal', animate('300ms ease-out'))
+            transition('normal => hovering', animate('200ms ease-in')),
+            transition('hovering => normal', animate('200ms ease-out'))
         ])
     ]
 })
@@ -31,10 +31,12 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
         let query = 'SELECT Id, Name, PhotoUrl FROM Contact';
-        this.sfdc.execute('AngularAppController', 'executeQuery', { query: query })
+        this.sfdc.execute('executeQuery', { query: query })
             .then((res) => {
                 this.contacts = res;
                 this.contacts.map((c) => { c.state = 'normal'; });
+            }, (err) => {
+                this.log.error(err);
             });
     }
 

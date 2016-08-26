@@ -1,0 +1,29 @@
+.detail.line {
+    font-size: 1.2rem;
+    display: block;
+    margin-bottom: .5rem;
+
+    .detail.label {
+        width: 200px;
+        display: inline-block;
+        vertical-align: middle;
+        font-weight: 700;
+        float: left;
+    }
+
+    .detail.content {
+        float: left;
+        display: inline-block;
+
+        &[contenteditable="true"] {
+            border-bottom: 1px solid #DDD;
+            min-width: 200px;
+        }
+    }
+
+    &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+}

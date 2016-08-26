@@ -7,6 +7,7 @@ module.exports = function(gulp, config, server) {
 	let vfDevTemplate = {
 		node_modules_directory: "/node_modules/",
 		app_directory: "/",
+		baseUrl: '/',
 		local: true,
 		controller: '',
 		auth: JSON.stringify({
@@ -19,6 +20,7 @@ module.exports = function(gulp, config, server) {
 	let vfProdTemplate = {
 		node_modules_directory: `{!URLFOR($Resource.${config.resources.node_module_resource_name})}/`,
 		app_directory: `{!URLFOR($Resource.${config.resources.app_resource_name})}/`,
+		baseUrl: '/apex/' + config.visualforce.rename_to.substr(0, config.visualforce.rename_to.indexOf('.')),
 		local: false,
 		controller: config.visualforce.controller_name
 	};

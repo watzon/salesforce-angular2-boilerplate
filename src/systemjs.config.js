@@ -14,7 +14,7 @@
     // 'angular2-in-memory-web-api': 'node_modules/angular2-in-memory-web-api',
     'rxjs':                       node_modules_directory + 'rxjs',
     'jsforce':                    node_modules_directory + 'jsforce',
-    'angular2-mdl':               node_modules_directory + 'angular2-mdl'
+    'moment':               node_modules_directory + 'moment'
   };
   // packages tells the System loader how to load when no filename and/or no extension
   var packages = {
@@ -22,7 +22,7 @@
     'rxjs':                       { defaultExtension: 'js' },
     // 'angular2-in-memory-web-api': { main: 'index.js', defaultExtension: 'js' },
     'jsforce':                    { main: 'build/jsforce.min.js', defaultExtension: 'js' },
-    'angular2-mdl':               { main: 'dist/components/index.js', defaultExtension: 'js' }
+    'moment':                     { main: 'moment.js', defaultExtension: 'js' }
   };
   var ngPackageNames = [
     'common',

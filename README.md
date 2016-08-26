@@ -89,5 +89,11 @@ THE SOFTWARE.
 
 ### Changelog
 
+##### [0.2.0] - 2016-08-26
+- Refactored some methods in the Salesforce service
+- Finished the ContactComponent (for now)
+- Added a CreateContactComponent
+- Made things work
+
 ##### [0.1.0] - 2016-08-23
 - Added this repo to github

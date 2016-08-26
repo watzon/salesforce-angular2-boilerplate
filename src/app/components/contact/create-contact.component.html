@@ -1,0 +1,36 @@
+<div class="ui grid">
+    <div class="sixteen wide column">
+        <h1>New Contact</h1>
+    </div>
+    <div class="ten column centered row">
+        <form class="ui form">
+            <div class="ten wide column">
+                <div class="fields">
+                    <div class="two wide field">
+                        <label>Salutation</label>
+                        <input type="text" name="salutation" placeholder="Salutation" [(ngModel)]="contact.Salutation">
+                    </div>
+                    <div class="seven wide field">
+                        <label>First Name</label>
+                        <input type="text" name="first-name" placeholder="First Name" [(ngModel)]="contact.FirstName">
+                    </div>
+                    <div class="seven wide field">
+                        <label>Last Name</label>
+                        <input type="text" name="last-name" placeholder="Last Name" [(ngModel)]="contact.LastName">
+                    </div>
+                </div>
+                <div class="fields">
+                    <div class="ten wide field">
+                        <label>Title</label>
+                        <input type="text" name="title" placeholder="Title" [(ngModel)]="contact.Title">
+                    </div>
+                    <div class="six wide field">
+                        <label>Birthdate</label>
+                        <input type="text" name="birthdate" placeholder="MM/DD/YYYY" [(ngModel)]="contact.Birthdate">
+                    </div>
+                </div>
+                <div class="ui button" (click)="save()">Create</div>
+            </div>
+        </form>
+    </div>
+</div>
