@@ -1,4 +1,4 @@
-## The Easier Way to Combine Salesforce and Angular 2
+# The Easier Way to Combine Salesforce and Angular 2
 
 This boilerplate, which is still largely unifinished, combines the powers of [Gulp](http://gulpjs.com/), [JSForce](http://jsforce.github.io), [Angular 2](http://angular.io), and [Salesforce](https://salesforce.com) and allows you to develop and test your Salesforce applications completely locally. Deploying is as easy as running `gulp` or you can be more specific and just `gulp deploy:classes`.
 
@@ -62,8 +62,15 @@ This boilerplate comes with a working example of a *contact management applicati
 
 If you find something wrong or come up with a better way to do things please fork and pull request. I check Github several times daily and love seeing that little notification bubble.
 
-### License
+### Known Issues
 
+So far things seem to be working well for the most part. Some things that I have noticed are:
+
++ Visualforce Remoting and WebServices use different date formats. I have tried to compensate for those differences in the Salesforce service with the `parseSoapResult` and `convertDate` methods, but I may have missed an edge case.
++ When attempting to access things like a Contact's `PhotoUrl` or Attachments Salesforce will require you to be logged in before it can show them. This may cause weird effects while developing locally if your Salesforce session ends.
+
+
+### License
 
 The MIT License
 
