@@ -89,6 +89,9 @@ THE SOFTWARE.
 
 ### Changelog
 
+##### [0.3.0] - 2016-08-27
+- Added SOQL class to build SOQL queries
+
 ##### [0.2.0] - 2016-08-27
 - Refactored some methods in the Salesforce service
 - Finished the ContactComponent (for now)
