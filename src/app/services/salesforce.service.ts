@@ -296,3 +296,130 @@ export class SalesforceService {
 		}
 	}
 }
+
+interface SOQL_ORDER {
+	field: string,
+	direction?: 'ASC' | 'DESC'
+}
+
+interface SOQL_BUILDER {
+	fields: string[], 	// SELECT
+	sobject: string,						// FROM
+	conditions?: string,					// WHERE
+	order?: SOQL_ORDER,						// ORDER BY
+	limit?: number							// LIMIT
+}
+
+export class SOQL {
+
+	public soql: string;
+
+	public builder: SOQL_BUILDER = {
+		fields: [],
+		sobject: null,
+		conditions: null,
+		order: null,
+		limit: null
+	}
+
+	constructor(query?: string) {
+		if (query) {
+			this.soql = SOQL.fromString(query);
+		}
+	}
+
+	public select(...items: Array<string | SOQL_BUILDER>): SOQL {
+		for (let item of items) {
+			if (typeof(item) === 'object') {
+				let fields = (<SOQL_BUILDER>item).fields.join(', ');
+				let subquery = `(SELECT ${fields} FROM ${(<SOQL_BUILDER>item).sobject})`;
+				this.builder.fields.push(subquery);
+			} else {
+				this.builder.fields.push(<string>item);
+			}
+		}
+
+		this.builder.fields = this.uniq(this.builder.fields);
+		return this.build();
+	}
+
+	public from(sobject: string): SOQL {
+		this.builder.sobject = sobject;
+		return this.build();
+	}
+	public sobject = this.from;
+
+	public where(conditions: string) {
+		this.builder.conditions = conditions;
+		return this.build();
+	}
+
+	public order(field: string, direction: 'ASC' | 'DESC') {
+		this.builder.order.field = field;
+		this.builder.order.direction = direction;
+		return this.build();
+	}
+
+	public orderBy(field: string) {
+		this.builder.order.field = field;
+		return this.build();
+	}
+
+	public orderDirection(direction: 'ASC' | 'DESC') {
+		this.builder.order.direction = direction;
+		return this.build();
+	}
+
+	public limit(num: number) {
+		this.builder.limit = num;
+		return this.build();
+	}
+
+	public build(): SOQL {
+		let builder = this.builder,
+			sobject = builder.sobject,
+			fields = builder.fields.join(', '),
+			conditions = builder.conditions,
+			limit = builder.limit,
+			order = undefined;
+		
+		if (builder.order && builder.order.field) {
+			order = 'ORDER BY ' + builder.order.field;
+			if (builder.order.direction) {
+				order += ' ' + builder.order.direction;
+			}
+		}
+
+		let soql = `SELECT ${fields} FROM ${sobject}`;
+		if (conditions) { soql += ` WHERE ${conditions}`; }
+		if (order) { soql += ` ${order}`; }
+		if (limit) { soql += ` ${limit}`; }
+
+		this.soql = soql;
+		return this;
+	}
+
+	public static fromString(query: string): string {
+		let fieldsRegex: RegExp = /SELECT[\s\n\r]+([a-zA-Z_\-\,\s\n\r\(\)]*)[\s\n\r]*(?:FROM[\s\n\r]*([a-zA-Z_]*)){1}/ig;
+		let match = fieldsRegex.exec(query);
+		if (match.length !== 3) { throw "Query must have fields to select and an sobject to select from"; }
+		let fields = match[1], sobject = match[2];
+		return '';
+	}
+
+	private uniq(a: Array<any>): Array<any> {
+    	var seen = {};
+	    var out = [];
+	    var len = a.length;
+	    var j = 0;
+	    for(var i = 0; i < len; i++) {
+	         var item = a[i];
+	         if(seen[item] !== 1) {
+	               seen[item] = 1;
+	               out[j++] = item;
+	         }
+	    }
+	    return out;
+	}
+
+}

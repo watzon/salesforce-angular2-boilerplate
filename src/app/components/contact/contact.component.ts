@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx'
 
 import { IContact } from '../../shared/sobjects';
-import { SalesforceService, LoggerService } from '../../services/index';
+import { SalesforceService, SOQL, LoggerService } from '../../services/index';
 
 import { NewlineToBreakPipe } from '../../pipes/index'
 import { ContentEditableModelDirective } from '../../directives/index'
@@ -58,17 +58,11 @@ export class ContactComponent implements OnInit {
         this.route.params
             .map(params => params['id'])
             .subscribe((id) => {
-                let query = `SELECT 
-                                Id,
-                                Salutation,
-                                FirstName,
-                                LastName,
-                                Title,
-                                Birthdate,
-                                PhotoUrl
-                             FROM Contact
-                             WHERE Id = '${id}'`;
-                this.sfdc.execute('executeQuery', { query: query })
+                let s = new SOQL()
+                    .select('Id', 'Salutation', 'FirstName', 'LastName', 'Title', 'Birthdate', 'PhotoUrl')
+                    .from('Contact')
+                    .where(`Id = '${id}'`);
+                this.sfdc.execute('executeQuery', { query: s.soql })
                     .then((res) => {
                         this.contact = res[0];
                         this.contact.PhotoUrl = this.sfdc.instanceUrl + this.contact.PhotoUrl;

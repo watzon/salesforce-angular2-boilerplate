@@ -1,5 +1,5 @@
 import { Component, OnInit,Input, trigger, state, style, transition, animate } from '@angular/core';
-import { SalesforceService, LoggerService } from '../../services/index';
+import { SalesforceService, LoggerService, SOQL } from '../../services/index';
 import { IContact } from '../../shared/sobjects';
 
 interface ContactCard extends IContact {
@@ -31,7 +31,10 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
         let query = 'SELECT Id, Salutation, FirstName, LastName, PhotoUrl FROM Contact';
-        this.sfdc.execute('executeQuery', { query: query })
+        let s = new SOQL()
+                    .select('Id', 'Salutation', 'FirstName', 'LastName', 'PhotoUrl')
+                    .from('Contact');
+        this.sfdc.execute('executeQuery', { query: s.soql })
             .then((res) => {
                 this.contacts = res;
                 this.contacts.map((c) => {
