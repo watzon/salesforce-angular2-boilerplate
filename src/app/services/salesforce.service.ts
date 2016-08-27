@@ -332,7 +332,8 @@ export class SOQL {
 		for (let item of items) {
 			if (typeof(item) === 'object') {
 				let fields = (<SOQL_BUILDER>item).fields.join(', ');
-				let subquery = `(SELECT ${fields} FROM ${(<SOQL_BUILDER>item).sobject})`;
+				let subquery = this.build(<SOQL_BUILDER>item);
+				subquery = `(${subquery})`;
 				this.builder.fields.push(subquery);
 			} else {
 				this.builder.fields.push(<string>item);
@@ -340,44 +341,50 @@ export class SOQL {
 		}
 
 		this.builder.fields = this.uniq(this.builder.fields);
-		return this.build();
+		this.soql = this.build(this.builder);
+		return this;
 	}
 
 	public from(sobject: string): SOQL {
 		this.builder.sobject = sobject;
-		return this.build();
+		this.soql = this.build(this.builder);
+		return this;
 	}
 	public sobject = this.from;
 
 	public where(conditions: string) {
 		this.builder.conditions = conditions;
-		return this.build();
+		this.soql = this.build(this.builder);
+		return this;
 	}
 
 	public order(field: string, direction: 'ASC' | 'DESC') {
 		this.builder.order.field = field;
 		this.builder.order.direction = direction;
-		return this.build();
+		this.soql = this.build(this.builder);
+		return this;
 	}
 
 	public orderBy(field: string) {
 		this.builder.order.field = field;
-		return this.build();
+		this.soql = this.build(this.builder);
+		return this;
 	}
 
 	public orderDirection(direction: 'ASC' | 'DESC') {
 		this.builder.order.direction = direction;
-		return this.build();
+		this.soql = this.build(this.builder);
+		return this;
 	}
 
 	public limit(num: number) {
 		this.builder.limit = num;
-		return this.build();
+		this.soql = this.build(this.builder);
+		return this;
 	}
 
-	public build(): SOQL {
-		let builder = this.builder,
-			sobject = builder.sobject,
+	public build(builder: SOQL_BUILDER): string {
+		let sobject = builder.sobject,
 			fields = builder.fields.join(', '),
 			conditions = builder.conditions,
 			limit = builder.limit,
@@ -395,8 +402,7 @@ export class SOQL {
 		if (order) { soql += ` ${order}`; }
 		if (limit) { soql += ` ${limit}`; }
 
-		this.soql = soql;
-		return this;
+		return soql;
 	}
 
 	public static fromString(query: string): string {
