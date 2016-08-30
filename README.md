@@ -6,7 +6,7 @@ This boilerplate, which is still largely unifinished, combines the powers of [Gu
 
 Setting up is super easy. First clone or fork this repository to your local machine with `git clone https://github.com/iDev0urer/salesforce-angular2-boilerplate.git` or, if you forked the repo, do `git clone YOUR-REPO-URL`. Then go to the salesforce-angular2-boilerplate directory with `cd salesforce-angular2-boilerplate`.
 
-You will need [http://nodejs.org](NodeJs) in order to work with this so make sure you have that installed.
+You will need [NodeJs](http://nodejs.org) in order to work with this so make sure you have that installed.
 
 Once you're in the salesforce-angular2-boilerplate directory run `npm install`. This project also uses **gulp 4**, so install that:
 
@@ -43,7 +43,7 @@ options:
 
 ### Running the example
 
-This boilerplate comes with a working example of a *contact management application*. To get it running just run the `gulp` command while in the salesforce-angular2-boilerplate directory. It will open a local server at [http://localhost:8080](http://localhost:8080) where you should be able to view the working application. When you're ready to deploy the application and test it in Salesforce just run `gulp deploy` and wait for the application to finish deploying.
+This boilerplate comes with a working example of a **contact management application**. To get it running just run the `gulp` command while in the salesforce-angular2-boilerplate directory. It will open a local server at [http://localhost:8080](http://localhost:8080) where you should be able to view the working application. When you're ready to deploy the application and test it in Salesforce just run `gulp deploy` and wait for the application to finish deploying.
 
 ### Contributing
 
@@ -83,7 +83,7 @@ THE SOFTWARE.
 
 ### Changelog
 
-##### [0.4.0] - 2016-08-30
+##### [0.4.2] - 2016-08-30
 - Removed https requirement from local server. Use [http://localhost:8080](http://localhost:8080) now
 - Added components to `app.module.ts` declarations
 - Made changes to forked version of jsforce and updated `salesforce.service.ts` to reflect those changes.
