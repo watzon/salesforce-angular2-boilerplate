@@ -55,7 +55,6 @@ So far things seem to be working well for the most part. Some things that I have
 
 + Visualforce Remoting and WebServices use different date formats. I have tried to compensate for those differences in the Salesforce service with the `parseSoapResult` and `convertDate` methods, but I may have missed an edge case.
 + When attempting to access things like a Contact's `PhotoUrl` or Attachments Salesforce will require you to be logged in before it can show them. This may cause weird effects while developing locally if your Salesforce session ends.
-+ For some reason with the way I'm doing the `runOutsideAngular` call in the Salesforce service when `SalesforceService.execute` is called in an `ngOnInit` it executes twice.
 
 ### License
 
@@ -82,6 +81,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ### Changelog
+
+##### [0.4.3] - 2016-08-30
+- Fixed bug with `ngZone` causing `execute` method to fire twice when within `ngOnInit`
 
 ##### [0.4.2] - 2016-08-30
 - Removed https requirement from local server. Use [http://localhost:8080](http://localhost:8080) now

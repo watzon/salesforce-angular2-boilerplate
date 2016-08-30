@@ -90,9 +90,12 @@ export class SalesforceService {
 								this.log.error(reason);
 								reject(reason);
 								this.runAfterHook(reason, null);
+							})
+							.then(() => {
+								this._zone.run(() => {});
 							});
 					});
-					this._zone.run(() => {});
+					
 				} else {
 					let reason = 'Before hook failed';
 					reject(reason);
@@ -120,9 +123,11 @@ export class SalesforceService {
 									this.log.error(reason);
 									reject(reason);
 									this.runAfterHook(reason, null);
+								})
+								.then(() => {
+									this._zone.run(() => {});
 								});
 					});
-					this._zone.run(() => {});
 				} else {
 					let reason = 'Before hook failed';
 					reject(reason);
