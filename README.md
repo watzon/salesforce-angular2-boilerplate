@@ -96,6 +96,11 @@ THE SOFTWARE.
 
 ### Changelog
 
+##### [0.4.0] - 2016-08-30
+- Removed https requirement from local server. Use [http://localhost:8080](http://localhost:8080) now
+- Added components to `app.module.ts` declarations
+- Made changes to forked version of jsforce and updated `salesforce.service.ts` to reflect those changes.
+
 ##### [0.3.0] - 2016-08-27
 - Added SOQL class to build SOQL queries
 
