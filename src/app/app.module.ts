@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { routing, appRoutingProviders } from './app.routing';
 
-import { AppComponent }  from './components/index';
+import { AppComponent, HomeComponent, ContactComponent, CreateContactComponent }  from './components/index';
 import { SalesforceService, LoggerService, LOG_LEVEL } from './services/index';
 import { SalesforceResolver } from './resolves/index';
 
@@ -14,7 +14,12 @@ import { SalesforceResolver } from './resolves/index';
         FormsModule,
         routing
     ],
-    declarations: [AppComponent],
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        ContactComponent,
+        CreateContactComponent
+    ],
     providers: [
         SalesforceService,
         LoggerService,

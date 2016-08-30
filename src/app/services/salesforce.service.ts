@@ -2,6 +2,7 @@ import { Injectable, Optional, NgZone } from '@angular/core';
 import { LoggerService, LOG_LEVEL } from './logger.service';
 import { ISObject } from '../shared/sobjects';
 import 'rxjs/add/operator/toPromise';
+
 let jsforce = require('jsforce');
 import * as moment from 'moment';
 
@@ -21,7 +22,7 @@ export class SalesforceService {
 	public controller: string;
 
 	public beforeHook: (controller?: string, method?: string, params?: Object, api?: API) => boolean;
-	public afterHook:  (error?: string, result?: any) => void;
+	public afterHook: (error?: string, result?: any) => void;
 
 	get instanceUrl(): string {
 		if (this.conn) {
@@ -135,14 +136,6 @@ export class SalesforceService {
 	}
 
 	public execute_rest(pkg: string, method: string, params: Object): Promise<any> {
-		let callback = function() { };
-		pkg = pkg.replace(/\./g, "/");
-
-		let endpointUrl = this.conn.instanceUrl + '/services/Soap/package/' + pkg;
-		let soap = new jsforce.SOAP(this.conn, {
-			xmlns: `http://soap.sforce.com/schemas/package/${pkg}`,
-			endpointUrl: endpointUrl
-		});
 
 		for (let key in params) {
 			if (typeof(params[key]) === 'object' && !Array.isArray(params[key])) {
@@ -151,7 +144,7 @@ export class SalesforceService {
 		}
 
 		return new Promise((resolve, reject) => {		
-			soap.invoke(method, params,callback)
+			this.conn.execute(pkg, method, params, null)
 				.then((res) => {
 					let result = this.parseSoapResult(res);
 					resolve(result);
@@ -322,11 +315,7 @@ export class SOQL {
 		limit: null
 	}
 
-	constructor(query?: string) {
-		if (query) {
-			this.soql = SOQL.fromString(query);
-		}
-	}
+	constructor() {}
 
 	public select(...items: Array<string | SOQL_BUILDER>): SOQL {
 		for (let item of items) {
@@ -403,14 +392,6 @@ export class SOQL {
 		if (limit) { soql += ` ${limit}`; }
 
 		return soql;
-	}
-
-	public static fromString(query: string): string {
-		let fieldsRegex: RegExp = /SELECT[\s\n\r]+([a-zA-Z_\-\,\s\n\r\(\)]*)[\s\n\r]*(?:FROM[\s\n\r]*([a-zA-Z_]*)){1}/ig;
-		let match = fieldsRegex.exec(query);
-		if (match.length !== 3) { throw "Query must have fields to select and an sobject to select from"; }
-		let fields = match[1], sobject = match[2];
-		return '';
 	}
 
 	private uniq(a: Array<any>): Array<any> {

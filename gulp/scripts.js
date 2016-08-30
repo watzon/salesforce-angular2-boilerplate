@@ -1,4 +1,4 @@
-module.exports = function(gulp, config) {
+module.exports = function(gulp, config, server) {
 	'use strict';
 
 	const sourcemaps = require('gulp-sourcemaps'),
