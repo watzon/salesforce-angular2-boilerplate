@@ -17,28 +17,34 @@ npm install -g gulp-cli
 
 If everything worked `gulp -v` should give you a version number over 4.
 
-You will also need to copy the `config.sample.yaml` file to `config.yaml` and fill out the pertenent information. It should look like this:
+You will also need to copy the `config.sample.js` file to `config.js` and fill out the pertenent information. It should look like this:
 
-```yaml
-deploy:
-  username:       user.name@yourcompany.com
-  password:       YourPasswordAndPossiblySecurityToken
-  login_url:      https://login.salesforce.com
-  api_version:    36.0
-  timeout:        120000
-  poll_interval:  5000
+```javascript
+module.exports = {
+    deploy: {
+        username:       'user.name@yourcompany.com',
+        password:       'YourPasswordAndPossiblySecurityToken',
+        login_url:      'https://login.salesforce.com',
+        api_version:    36.0,
+        timeout:        120000,
+        poll_interval:  5000,
+    },
 
-visualforce:
-  original_filename: index.vf.html
-  rename_to: AngularApp.page
-  controller_name: AngularAppController
+    visualforce: {
+        template: 'index.page.html',
+        page: 'AngularApp',
+        controller: 'AngularAppController'
+    },
 
-resources:
-  app_resource_name: AngularApp
-  node_module_resource_name: NodeModules
+    resources: {
+        app_resource_name: 'AngularApp',
+        node_module_resource_name: 'NodeModules',
+    },
 
-options:
-  debug: true
+    options: {
+        
+    }
+}
 ```
 
 ### Running the example
@@ -81,6 +87,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ### Changelog
+
+##### [0.5.0] - 2016-09-01
+- Restructured config files. Now using `config.js` rather than `yaml`
+- Took the `pxml.js` file which is used for `package.xml` generation and refactored it out into it's [own module](http://npmjs.org/package/pxml)
+- Refactored gulpfiles to fit with new config
 
 ##### [0.4.3] - 2016-08-30
 - Fixed bug with `ngZone` causing `execute` method to fire twice when within `ngOnInit`

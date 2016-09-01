@@ -2,10 +2,9 @@
 
 const gulp = require('gulp'),
 	fs = require('fs'),
-	yaml = require('js-yaml'),
 	gls = require('gulp-live-server');
 
-let config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
+let config = require('./config');
 let server = gls.new('app.js');
 
 gulp.task('serve', () => {

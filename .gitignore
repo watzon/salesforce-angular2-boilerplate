@@ -1,7 +1,7 @@
 .ssh/
 .tmp/
 build/
-config.yaml
+config.js
 node_modules/
 vendor/
 typings/

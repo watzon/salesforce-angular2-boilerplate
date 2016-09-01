@@ -20,39 +20,36 @@ module.exports = function(gulp, config, server) {
 	let vfProdTemplate = {
 		node_modules_directory: `{!URLFOR($Resource.${config.resources.node_module_resource_name})}/`,
 		app_directory: `{!URLFOR($Resource.${config.resources.app_resource_name})}/`,
-		baseUrl: '/apex/' + config.visualforce.rename_to.substr(0, config.visualforce.rename_to.indexOf('.')),
+		baseUrl: '/apex/' + config.visualforce.page,
 		local: false,
-		controller: config.visualforce.controller_name
+		controller: config.visualforce.controller
 	};
 
 	gulp.task('html:dev', () => {
-		return gulp.src(['src/**/!(*.vf).html'])
+		return gulp.src(['src/**/*.html', 'src/' + config.visualforce.template])
 			.pipe(gulp.dest('build'));
 	});
 
 	gulp.task('html:prod', () => {
-		return gulp.src(['src/**/!(*.vf).html'])
+		return gulp.src(['src/**/*.html', 'src/' + config.visualforce.template])
 			.pipe(gulp.dest('build'));
 	});
 
 	gulp.task('visualforce:dev', () => {
-		return gulp.src(['src/**/*.vf.html'])
+		return gulp.src('src/' + config.visualforce.template)
 		.pipe(rename((path) => {
-			if (path.basename.indexOf('vf') > -1) {
-				path.basename = path.basename.replace('.vf', '');
-			}
+			path.basename = 'index';
+			path.extname = '.html'
 		}))
 		.pipe(template(vfDevTemplate))
 		.pipe(gulp.dest('build'));
 	});
 
 	gulp.task('visualforce:prod', () => {
-		return gulp.src(`src/${config.visualforce.original_filename}`)
+		return gulp.src(`src/${config.visualforce.template}`)
 		.pipe(rename((path) => {
-			if (path.basename.indexOf('vf') > -1) {
-				path.basename = config.visualforce.rename_to;
-				path.extname = '';
-			}
+			path.basename = config.visualforce.page;
+			path.extname = '.page';
 		}))
 		.pipe(template(vfProdTemplate))
 		.pipe(gulp.dest('build'));
@@ -60,6 +57,6 @@ module.exports = function(gulp, config, server) {
 
 	gulp.task('watch:html', () => {
 		gulp.watch('src/**/!(*.vf).html', gulp.series('html:dev'));
-		gulp.watch('src/**/*.vf.html', gulp.series('visualforce:dev'));
+		gulp.watch('src/' + config.visualforce.template, gulp.series('visualforce:dev'));
 	});
 }

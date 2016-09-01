@@ -4,7 +4,7 @@ module.exports = function(gulp, config) {
 	const archiver = require('gulp-archiver'),
 		rename = require('gulp-rename'),
 		del = require('del'),
-		pxml = require('./pxml'),
+		pxml = require('pxml').PackageXML,
 		file = require('gulp-file'),
 		merge = require('merge-stream'),
 		forceDeploy = require('gulp-jsforce-deploy');
@@ -40,7 +40,7 @@ module.exports = function(gulp, config) {
 	));
 
 	gulp.task('tempgen:visualforce', () => {
-		return gulp.src(`build/${config.visualforce.rename_to}`)
+		return gulp.src(`build/${config.visualforce.page}.page`)
 			.pipe(gulp.dest('.tmp/pages'));
 	});
 
@@ -63,7 +63,7 @@ module.exports = function(gulp, config) {
 	});
 
 	gulp.task('tempgen:app', () => {
-		return gulp.src(['build/**/*', `!build/${config.visualforce.rename_to}`])
+		return gulp.src(['build/**/*', `!build/${config.visualforce.template}`])
 			.pipe(gulp.dest(`.tmp/static_resources/${config.resources.app_resource_name}`));
 	});
 
@@ -108,8 +108,8 @@ module.exports = function(gulp, config) {
 				resourceMetaXml, { src: true })
 			.pipe(gulp.dest('.tmp/staticresources'));
 
-		let page = file(`${config.visualforce.rename_to}-meta.xml`,
-				pageMetaXml.replace("{0}", config.visualforce.rename_to.replace('.page', '')), { src: true })
+		let page = file(`${config.visualforce.page}.page-meta.xml`,
+				pageMetaXml.replace("{0}", config.visualforce.page), { src: true })
 			.pipe(gulp.dest('.tmp/pages'));
 
 		return merge(node_modules, app, page);
