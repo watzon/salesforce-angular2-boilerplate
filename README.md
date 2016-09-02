@@ -88,6 +88,9 @@ THE SOFTWARE.
 
 ### Changelog
 
+##### [0.6.0] - 2016-09-01
+- Updated Angular app to version 2.0.0-rc.6. See the [Angular 2 Changelog](https://github.com/angular/angular/blob/master/CHANGELOG.md) for breaking changes.
+
 ##### [0.5.0] - 2016-09-01
 - Restructured config files. Now using `config.js` rather than `yaml`
 - Took the `pxml.js` file which is used for `package.xml` generation and refactored it out into it's [own module](http://npmjs.org/package/pxml)

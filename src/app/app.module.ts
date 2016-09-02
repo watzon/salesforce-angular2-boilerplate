@@ -8,6 +8,8 @@ import { AppComponent, HomeComponent, ContactComponent, CreateContactComponent }
 import { SalesforceService, LoggerService, LOG_LEVEL } from './services/index';
 import { SalesforceResolver } from './resolves/index';
 
+import { ContentEditableModelDirective } from './directives/contentEditableModel.directive';
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -18,7 +20,9 @@ import { SalesforceResolver } from './resolves/index';
         AppComponent,
         HomeComponent,
         ContactComponent,
-        CreateContactComponent
+        CreateContactComponent,
+
+        ContentEditableModelDirective
     ],
     providers: [
         SalesforceService,
