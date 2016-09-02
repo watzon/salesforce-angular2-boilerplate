@@ -12,7 +12,7 @@ import { SalesforceResolver } from './resolves/index';
 import { ContentEditableModelDirective } from './directives/contentEditableModel.directive';
 import { GravatarDirective } from './directives/gravatar.directive';
 
-import { NewlineToBreakPipe } from './pipes/index'
+import { NewlineToBreakPipe, KeysPipe } from './pipes/index'
 
 @NgModule({
     imports: [
@@ -29,7 +29,8 @@ import { NewlineToBreakPipe } from './pipes/index'
 
         ContentEditableModelDirective,
         GravatarDirective,
-        NewlineToBreakPipe
+        NewlineToBreakPipe,
+        KeysPipe
     ],
     providers: [
         SalesforceService,

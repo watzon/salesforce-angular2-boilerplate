@@ -3,12 +3,20 @@ import { LoggerService, LOG_LEVEL } from './logger.service';
 import { ISObject } from '../shared/sobjects';
 import 'rxjs/add/operator/toPromise';
 
+import * as _ from 'lodash';
+
 let jsforce = require('jsforce');
 import * as moment from 'moment';
 
 export enum API {
 	REST,
 	VFR
+}
+
+export interface RemotingOptions {
+	buffer?: boolean,
+	escape?: boolean,
+	timeout?: number
 }
 
 @Injectable()
@@ -59,16 +67,18 @@ export class SalesforceService {
 	}
 
 	/**
-	 * @param  {string} controller 	- The APEX controller to use
-	 * @param  {string} method 		- The method to execute on the controller. To use
-	 * 						     	  both REST and Visualforce Remoting the methods
-	 * 						          must be tagged with both `@RemoteAction` and `WebService`
-	 * @param  {Object} params      - Parameters to pass to the APEX method as an object with
-	 * 							      the format `{ parameter_name: value }`
-	 * @return {Promise<any>} 	      Returns a promise with the result or rejects with the
-	 * 						          remoting exception. 
+	 * @param  {string} controller 	        - The APEX controller to use
+	 * @param  {string} method 				- The method to execute on the controller. To use
+	 * 						     	          both REST and Visualforce Remoting the methods
+	 * 						                  must be tagged with both `@RemoteAction` and `WebService`
+	 * @param  {Object} params      		- Parameters to pass to the APEX method as an object with
+	 * 							      		  the format `{ parameter_name: value }`
+	 * @param  {RemotingOptions} vfrOptions	- An object containing options to pass to the Visualforce
+	 * 										  remoting call. 
+	 * @return {Promise<any>} 	 Returns a promise with the result or rejects with the
+	 * 						     remoting exception. 
 	 */
-	public execute(method: string, params?: Object): Promise<any> {
+	public execute(method: string, params?: Object, vfrOptions?: RemotingOptions): Promise<any> {
 		this.log.group('Executing method: ' + method, LOG_LEVEL.DEBUG);
 		this.log.debug('Params:',params);
 
@@ -114,7 +124,7 @@ export class SalesforceService {
 					}
 
 					this._zone.runOutsideAngular(() => {
-						this.execute_vfr(method, tmp)
+						this.execute_vfr(method, tmp, vfrOptions)
 								.then((res) => {
 									this.log.debug('Result: ', res);
 									resolve(res);
@@ -151,8 +161,8 @@ export class SalesforceService {
 		return new Promise((resolve, reject) => {		
 			this.conn.execute(pkg, method, params, null)
 				.then((res) => {
-					let result = this.parseSoapResult(res);
-					resolve(result);
+					res = this.parseResult(res);
+					resolve(res);
 				}, (reason) => {
 					reject(reason);
 				});
@@ -184,11 +194,13 @@ export class SalesforceService {
 		return tmp;
 	}
 
-	private execute_vfr(method: string, params: Array<any>): Promise<any> {
+	private execute_vfr(method: string, params: Array<any>, config?: RemotingOptions): Promise<any> {
 		// Set ctrl to the Visualforce Remoting controller
 		let controller = this.controller;
 		let ctrl: any = window[controller] || {};
 		let self = this;
+
+		config = config || { escape: false }
 
 		// Make sure the controller has the method we're attempting to call
 		if (ctrl.hasOwnProperty(method)) {
@@ -205,7 +217,7 @@ export class SalesforceService {
 
 				let callback = function(res, err) {
 					if (res) {
-						res = self.arrayify(res);
+						res = self.parseResult(res);
 						resolve(res);
 					} else {
 						reject(err.message);
@@ -213,6 +225,7 @@ export class SalesforceService {
 				}
 
 				params.push(callback);
+				params.push(config);
 				ctrl[method].apply(null, params);
 			});
 		} else {
@@ -240,7 +253,7 @@ export class SalesforceService {
 		}
 	}
 
-	private parseSoapResult(result: any): Array<Object> {
+	private parseResult(result: any): Array<Object> {
 		if (!result) { return []; }
 		result = this.stripNamespace(result);
 		if (result.result) { result = result.result; }
@@ -258,13 +271,22 @@ export class SalesforceService {
 
 		if (!isNaN(val)) {
 			return +val;
-		} else if (val == 'true' || val == 'false') {
+		} else if (val == 'true' || val == 'false' || this.isJsonString(val)) {
 			return JSON.parse(val);
 		} else if (dateRegex.test(val)) {
 			return Date.parse(val);
 		} else {
 			return val;
 		}
+	}
+
+	private isJsonString(str) {
+		try {
+			JSON.parse(str);
+		} catch (e) {
+			return false;
+		}
+		return true;
 	}
 
 	private stripNamespace(obj: any): any {
@@ -334,7 +356,7 @@ export class SOQL {
 			}
 		}
 
-		this.builder.fields = this.uniq(this.builder.fields);
+		this.builder.fields = _.uniq(this.builder.fields);
 		this.soql = this.build(this.builder);
 		return this;
 	}
@@ -397,21 +419,6 @@ export class SOQL {
 		if (limit) { soql += ` ${limit}`; }
 
 		return soql;
-	}
-
-	private uniq(a: Array<any>): Array<any> {
-    	var seen = {};
-	    var out = [];
-	    var len = a.length;
-	    var j = 0;
-	    for(var i = 0; i < len; i++) {
-	         var item = a[i];
-	         if(seen[item] !== 1) {
-	               seen[item] = 1;
-	               out[j++] = item;
-	         }
-	    }
-	    return out;
 	}
 
 }

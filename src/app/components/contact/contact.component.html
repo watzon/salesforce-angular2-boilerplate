@@ -20,7 +20,10 @@
 
             <div class="detail line divider">
                 <div class="detail label">Salutation:</div>
-                <div class="detail content" [attr.contenteditable]="editing" [(contentEditableModel)]="contact.Salutation">{{contact.Salutation}}</div>
+                <div class="detail content" *ngIf="!editing">{{contact.Salutation}}</div>
+                <select *ngIf="editing" name="salutation" [(ngModel)]="contact.Salutation">
+                    <option *ngFor="let k of salutations | keys" [ngValue]="k">{{salutations[k]}}</option>
+                </select>
             </div>
 
             <div class="detail line divider">

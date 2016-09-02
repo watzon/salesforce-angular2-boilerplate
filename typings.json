@@ -3,7 +3,8 @@
     "core-js": "registry:dt/core-js#0.0.0+20160602141332",
     "jasmine": "registry:dt/jasmine#2.2.0+20160621224255",
     "jquery": "registry:dt/jquery#1.10.0+20160704162008",
-    "moment": "registry:dt/moment#2.8.0+20160316155526",
+    "lodash": "registry:dt/lodash#4.14.0+20160830145422",
+    "moment": "registry:dt/moment#2.11.1+20160829143156",
     "node": "registry:dt/node#6.0.0+20160807145350"
   },
   "dependencies": {

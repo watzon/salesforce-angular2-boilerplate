@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs/Rx'
 import { Router } from '@angular/router';
@@ -11,13 +11,22 @@ import { SalesforceService, LoggerService } from '../../services/index';
     selector: 'create-contact',
     templateUrl: 'create-contact.component.html'
 })
-export class CreateContactComponent {
+export class CreateContactComponent implements OnInit {
 
     private contact: IContact = {};
+    private salutations: { [s: string]: string };
     private saving: boolean = false;
     private error: string;
     
     constructor(private sfdc: SalesforceService, private log: LoggerService, private router: Router) {}
+
+    private getContactSalutations() {
+        let id = this.contact.Id;
+        this.sfdc.execute('getContactSalutationsPicklist')
+            .then((res) => {
+                this.salutations = res[0];
+            });
+    }
 
     private save() {
         if (!this.saving) {
@@ -34,5 +43,9 @@ export class CreateContactComponent {
                     this.log.error(reason);
                 });
         }
+    }
+
+    ngOnInit(): void {
+        this.getContactSalutations();
     }
 }

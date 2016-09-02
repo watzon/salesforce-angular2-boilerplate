@@ -7,7 +7,8 @@ module.exports = function(gulp, config) {
 		pxml = require('pxml').PackageXML,
 		file = require('gulp-file'),
 		merge = require('merge-stream'),
-		forceDeploy = require('gulp-jsforce-deploy');
+		forceDeploy = require('gulp-jsforce-deploy'),
+		uglify = require('gulp-uglify');
 
 	let pageMetaXml = `<?xml version="1.0" encoding="UTF-8"?>
 <ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
@@ -46,19 +47,16 @@ module.exports = function(gulp, config) {
 
 	gulp.task('tempgen:node_modules', () => {
 		return gulp.src([
-			'node_modules/@angular/**/*',
-			'node_modules/rxjs/**/*',
-			'!node_modules/rxjs/src/**/*',
+			'node_modules/@angular/**/bundles/*.umd.js',
+			'node_modules/rxjs/**/*.js',
 			'node_modules/jsforce/build/jsforce.min.js',
 			'node_modules/core-js/client/shim.min.js',
 			'node_modules/zone.js/dist/zone.js',
 			'node_modules/reflect-metadata/Reflect.js',
 			'node_modules/systemjs/dist/system.src.js',
-			'node_modules/moment/moment.js',
-			'node_modules/crypto-js/**/*',
-			'!**/testing/**',
-			'!**/testing.*',
-			'!**/*.{md|txt|org|d.ts|js.map}'
+			'node_modules/moment/min/moment.min.js',
+			'node_modules/crypto-js/crypto-js.js',
+			'node_modules/lodash/lodash.min.js'
 		], { base: 'node_modules' })
 			.pipe(gulp.dest(`.tmp/static_resources/${config.resources.node_module_resource_name}`));
 	});
