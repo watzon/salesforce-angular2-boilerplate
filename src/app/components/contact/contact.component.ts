@@ -5,16 +5,11 @@ import { Subscription } from 'rxjs/Rx'
 import { IContact } from '../../shared/sobjects';
 import { SalesforceService, SOQL, LoggerService } from '../../services/index';
 
-import { NewlineToBreakPipe } from '../../pipes/index'
-import { ContentEditableModelDirective } from '../../directives/index'
-
 @Component({
     moduleId: module.id,
     selector: 'contact',
     templateUrl: 'contact.component.html',
-    styleUrls: ['contact.component.css'],
-    pipes: [ NewlineToBreakPipe ],
-    directives: [ ContentEditableModelDirective ]
+    styleUrls: ['contact.component.css']
 })
 export class ContactComponent implements OnInit {
 
@@ -28,13 +23,12 @@ export class ContactComponent implements OnInit {
 
     private startEdit() {
         this.editing = true;
-        this.oldContact = this.contact;
+        this.oldContact = JSON.parse(JSON.stringify(this.contact));
     }
 
     private cancelEdit() {
-        this.editing = false;
         if (this.oldContact) {
-            this.contact = this.oldContact;
+            this.contact = JSON.parse(JSON.stringify(this.oldContact));
         }
     }
 
@@ -59,7 +53,7 @@ export class ContactComponent implements OnInit {
             .map(params => params['id'])
             .subscribe((id) => {
                 let s = new SOQL()
-                    .select('Id', 'Salutation', 'FirstName', 'LastName', 'Title', 'Birthdate', 'PhotoUrl')
+                    .select('Id', 'Salutation', 'FirstName', 'LastName', 'Title', 'Birthdate', 'Email')
                     .from('Contact')
                     .where(`Id = '${id}'`);
                 this.sfdc.execute('executeQuery', { query: s.soql })

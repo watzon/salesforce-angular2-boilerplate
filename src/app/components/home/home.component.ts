@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
     constructor(private sfdc: SalesforceService, private log: LoggerService) {}
 
     ngOnInit() {
-        let query = 'SELECT Id, Salutation, FirstName, LastName, PhotoUrl FROM Contact';
+        let query = 'SELECT Id, Salutation, FirstName, LastName, Email FROM Contact';
         let s = new SOQL()
                     .select('Id', 'Salutation', 'FirstName', 'LastName', 'PhotoUrl')
                     .from('Contact');

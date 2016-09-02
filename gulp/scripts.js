@@ -5,7 +5,10 @@ module.exports = function(gulp, config, server) {
 				uglify = require('gulp-uglify'),
 				ts = require('gulp-typescript');
 
-	let tsProject = ts.createProject('tsconfig.json', { rootDir: 'src' });
+	let tsProject = ts.createProject('tsconfig.json', {
+		rootDir: 'src',
+		typescript: require('typescript')
+	});
 
 	gulp.task('typescript:dev', () => {
 		let tsResult =  tsProject.src('src/**/*.ts')

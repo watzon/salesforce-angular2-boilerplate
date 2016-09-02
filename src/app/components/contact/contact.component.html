@@ -13,7 +13,7 @@
     </div>
     <div class="row" *ngIf="contact">
         <div class="four wide column">
-            <img [src]="contact.PhotoUrl" class="ui fluid rounded image">
+            <img [gravatar]="contact.Email" class="ui fluid rounded image">
         </div>
         <div class="twelve wide column">
             <h2 class="ui dividing header">{{contact.Salutation}} {{contact.FirstName}} {{contact.LastName}}</h2>
@@ -31,6 +31,11 @@
             <div class="detail line divider">
                 <div class="detail label">Last Name:</div>
                 <div class="detail content" [attr.contenteditable]="editing" [(contentEditableModel)]="contact.LastName">{{contact.LastName}}</div>
+            </div>
+
+            <div class="detail line divider">
+                <div class="detail label">Email:</div>
+                <div class="detail content" [attr.contenteditable]="editing" [(contentEditableModel)]="contact.Email">{{contact.Email}}</div>
             </div>
 
             <div class="detail line divider">

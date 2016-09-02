@@ -55,6 +55,7 @@ module.exports = function(gulp, config) {
 			'node_modules/reflect-metadata/Reflect.js',
 			'node_modules/systemjs/dist/system.src.js',
 			'node_modules/moment/moment.js',
+			'node_modules/crypto-js/**/*',
 			'!**/testing/**',
 			'!**/testing.*',
 			'!**/*.{md|txt|org|d.ts|js.map}'

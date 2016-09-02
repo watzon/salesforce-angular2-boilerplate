@@ -60,7 +60,6 @@ If you find something wrong or come up with a better way to do things please for
 So far things seem to be working well for the most part. Some things that I have noticed are:
 
 + Visualforce Remoting and WebServices use different date formats. I have tried to compensate for those differences in the Salesforce service with the `parseSoapResult` and `convertDate` methods, but I may have missed an edge case.
-+ When attempting to access things like a Contact's `PhotoUrl` or Attachments Salesforce will require you to be logged in before it can show them. This may cause weird effects while developing locally if your Salesforce session ends.
 
 ### License
 
@@ -87,6 +86,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ### Changelog
+
+##### [0.6.1] - 2016-09-01
+- Added Gravatar directive to get use pictures rather than pulling them from Salesforce
 
 ##### [0.6.0] - 2016-09-01
 - Updated Angular app to version 2.0.0-rc.6. See the [Angular 2 Changelog](https://github.com/angular/angular/blob/master/CHANGELOG.md) for breaking changes.

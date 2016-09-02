@@ -1,6 +1,7 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { routing, appRoutingProviders } from './app.routing';
 
@@ -9,11 +10,15 @@ import { SalesforceService, LoggerService, LOG_LEVEL } from './services/index';
 import { SalesforceResolver } from './resolves/index';
 
 import { ContentEditableModelDirective } from './directives/contentEditableModel.directive';
+import { GravatarDirective } from './directives/gravatar.directive';
+
+import { NewlineToBreakPipe } from './pipes/index'
 
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
+        HttpModule,
         routing
     ],
     declarations: [
@@ -22,7 +27,9 @@ import { ContentEditableModelDirective } from './directives/contentEditableModel
         ContactComponent,
         CreateContactComponent,
 
-        ContentEditableModelDirective
+        ContentEditableModelDirective,
+        GravatarDirective,
+        NewlineToBreakPipe
     ],
     providers: [
         SalesforceService,
