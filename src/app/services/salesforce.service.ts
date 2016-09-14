@@ -1,7 +1,7 @@
-import { Injectable, Optional, NgZone } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Observable, Scheduler } from 'rxjs/Rx';
 
-import { LoggerService, LOG_LEVEL, LocalStorageService } from './index';
+import { LoggerService, LOG_LEVEL } from './index';
 
 import { ISObject } from '../shared/sobjects';
 import 'rxjs/add/operator/toPromise';
@@ -22,11 +22,6 @@ export interface RemotingOptions {
 	timeout?: number
 }
 
-export interface CachingOptions {
-	cache: boolean,
-	value?: string
-}
-
 @Injectable()
 export class SalesforceService {
 
@@ -39,8 +34,6 @@ export class SalesforceService {
 
 	public beforeHook: (controller?: string, method?: string, params?: Object, api?: API) => boolean;
 	public afterHook: (error?: string, result?: any) => void;
-
-	public cache: LocalStorageService = new LocalStorageService('methodStore');
 
 	get instanceUrl(): string {
 		if (this.conn) {
@@ -86,11 +79,9 @@ export class SalesforceService {
 	 * @return {Promise<any>} 	 Returns a promise with the result or rejects with the
 	 * 						     remoting exception. 
 	 */
-	public execute(method: string, params?: Object, cache?: CachingOptions, vfrOptions?: RemotingOptions): Promise<any> {
+	public execute(method: string, params?: Object, vfrOptions?: RemotingOptions): Promise<any> {
 		this.log.group('Executing method: ' + method, LOG_LEVEL.DEBUG);
 		this.log.debug('Params:',params);
-
-		cache = cache || { cache: false }
 
 		let controller = this.controller;
 		let p: Promise<any> = new Promise((resolve, reject) => {
@@ -101,34 +92,21 @@ export class SalesforceService {
 				
 				if (beforeHookResult) {
 
-					let cached;
-					if (cache.cache) {
-						cache.value = cache.value || method;
-						cached = this.cache.fetchItem(cache.value);
-						if (cached) {
-							this.log.debug('Cached result', cached);
-							resolve(cached);
-						}
-					} 
-
-					if (!cached) {
-						this._zone.runOutsideAngular(() => {
-							this.execute_rest(controller, method, params)
-								.then((res) => {
-									this.log.debug('Result: ', res);
-									resolve(res);
-									if (cache.cache) this.cache.insertItem(cache.value, res);
-									this.runAfterHook(null, res);
-								}, (reason) => {
-									this.log.error(reason);
-									reject(reason);
-									this.runAfterHook(reason, null);
-								})
-								.then(() => {
-									this._zone.run(() => {});
-								});
-						});
-					}					
+                    this._zone.runOutsideAngular(() => {
+                        this.execute_rest(controller, method, params)
+                            .then((res) => {
+                                this.log.debug('Result: ', res);
+                                resolve(res);
+                                this.runAfterHook(null, res);
+                            }, (reason) => {
+                                this.log.error(reason);
+                                reject(reason);
+                                this.runAfterHook(reason, null);
+                            })
+                            .then(() => {
+                                this._zone.run(() => {});
+                            });
+                    });
 					
 				} else {
 					let reason = 'Before hook failed';
@@ -147,33 +125,22 @@ export class SalesforceService {
 						tmp.push(params[i]);
 					}
 
-					let cached;
-					if (cache) {
-						cached = this.cache.fetchItem(method);
-						if (cached) {
-							this.log.debug('Cached result', cached);
-							resolve(cached);
-						}
-					} 
+                    this._zone.runOutsideAngular(() => {
+                        this.execute_vfr(method, tmp, vfrOptions)
+                                .then((res) => {
+                                    this.log.debug('Result: ', res);
+                                    resolve(res);
+                                    this.runAfterHook(null, res);
+                                }, (reason) => {
+                                    this.log.error(reason);
+                                    reject(reason);
+                                    this.runAfterHook(reason, null);
+                                })
+                                .then(() => {
+                                    this._zone.run(() => {});
+                                });
+                    });
 
-					if (!cached) {
-						this._zone.runOutsideAngular(() => {
-							this.execute_vfr(method, tmp, vfrOptions)
-									.then((res) => {
-										this.log.debug('Result: ', res);
-										resolve(res);
-										if (cache) this.cache.insertItem(method, res);
-										this.runAfterHook(null, res);
-									}, (reason) => {
-										this.log.error(reason);
-										reject(reason);
-										this.runAfterHook(reason, null);
-									})
-									.then(() => {
-										this._zone.run(() => {});
-									});
-						});
-					}
 				} else {
 					let reason = 'Before hook failed';
 					reject(reason);
