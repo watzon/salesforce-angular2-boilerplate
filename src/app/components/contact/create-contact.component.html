@@ -3,12 +3,12 @@
         <h1>New Contact</h1>
     </div>
     <div class="sixteen wide column">
-        <form #createContactForm="ngForm" class="ui big form">
+        <form #createContactForm="ngForm" class="ui big form" [class.loading]="loading">
             <div class="fields">
                 <div class="two wide field">
                     <label>Salutation</label>
                     <select name="salutation" [(ngModel)]="contact.Salutation">
-                        <option *ngFor="let k of salutations | keys" [ngValue]="k">{{salutations[k]}}</option>
+                        <option *ngFor="let k of salutations | keys">{{salutations[k]}}</option>
                     </select>
                 </div>
                 <div class="seven wide field">

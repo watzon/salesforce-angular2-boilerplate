@@ -1,5 +1,8 @@
 import { Injectable, Optional, NgZone } from '@angular/core';
-import { LoggerService, LOG_LEVEL } from './logger.service';
+import { Observable, Scheduler } from 'rxjs/Rx';
+
+import { LoggerService, LOG_LEVEL, LocalStorageService } from './index';
+
 import { ISObject } from '../shared/sobjects';
 import 'rxjs/add/operator/toPromise';
 
@@ -19,6 +22,11 @@ export interface RemotingOptions {
 	timeout?: number
 }
 
+export interface CachingOptions {
+	cache: boolean,
+	value?: string
+}
+
 @Injectable()
 export class SalesforceService {
 
@@ -32,6 +40,8 @@ export class SalesforceService {
 	public beforeHook: (controller?: string, method?: string, params?: Object, api?: API) => boolean;
 	public afterHook: (error?: string, result?: any) => void;
 
+	public cache: LocalStorageService = new LocalStorageService('methodStore');
+
 	get instanceUrl(): string {
 		if (this.conn) {
 			return this.conn.instanceUrl;
@@ -40,9 +50,7 @@ export class SalesforceService {
 		}
 	}
 
-	constructor(private _zone: NgZone, private log: LoggerService) {
-		
-	}
+	constructor(private _zone: NgZone, private log: LoggerService) {}
 
 	public authenticate(login_url: string,
 		username: string,
@@ -78,9 +86,11 @@ export class SalesforceService {
 	 * @return {Promise<any>} 	 Returns a promise with the result or rejects with the
 	 * 						     remoting exception. 
 	 */
-	public execute(method: string, params?: Object, vfrOptions?: RemotingOptions): Promise<any> {
+	public execute(method: string, params?: Object, cache?: CachingOptions, vfrOptions?: RemotingOptions): Promise<any> {
 		this.log.group('Executing method: ' + method, LOG_LEVEL.DEBUG);
 		this.log.debug('Params:',params);
+
+		cache = cache || { cache: false }
 
 		let controller = this.controller;
 		let p: Promise<any> = new Promise((resolve, reject) => {
@@ -90,21 +100,35 @@ export class SalesforceService {
 				let beforeHookResult = this.runBeforeHook(controller, method, params, API.REST);
 				
 				if (beforeHookResult) {
-					this._zone.runOutsideAngular(() => {
-						this.execute_rest(controller, method, params)
-							.then((res) => {
-								this.log.debug('Result: ', res);
-								resolve(res);
-								this.runAfterHook(null, res);
-							}, (reason) => {
-								this.log.error(reason);
-								reject(reason);
-								this.runAfterHook(reason, null);
-							})
-							.then(() => {
-								this._zone.run(() => {});
-							});
-					});
+
+					let cached;
+					if (cache.cache) {
+						cache.value = cache.value || method;
+						cached = this.cache.fetchItem(cache.value);
+						if (cached) {
+							this.log.debug('Cached result', cached);
+							resolve(cached);
+						}
+					} 
+
+					if (!cached) {
+						this._zone.runOutsideAngular(() => {
+							this.execute_rest(controller, method, params)
+								.then((res) => {
+									this.log.debug('Result: ', res);
+									resolve(res);
+									if (cache.cache) this.cache.insertItem(cache.value, res);
+									this.runAfterHook(null, res);
+								}, (reason) => {
+									this.log.error(reason);
+									reject(reason);
+									this.runAfterHook(reason, null);
+								})
+								.then(() => {
+									this._zone.run(() => {});
+								});
+						});
+					}					
 					
 				} else {
 					let reason = 'Before hook failed';
@@ -123,21 +147,33 @@ export class SalesforceService {
 						tmp.push(params[i]);
 					}
 
-					this._zone.runOutsideAngular(() => {
-						this.execute_vfr(method, tmp, vfrOptions)
-								.then((res) => {
-									this.log.debug('Result: ', res);
-									resolve(res);
-									this.runAfterHook(null, res);
-								}, (reason) => {
-									this.log.error(reason);
-									reject(reason);
-									this.runAfterHook(reason, null);
-								})
-								.then(() => {
-									this._zone.run(() => {});
-								});
-					});
+					let cached;
+					if (cache) {
+						cached = this.cache.fetchItem(method);
+						if (cached) {
+							this.log.debug('Cached result', cached);
+							resolve(cached);
+						}
+					} 
+
+					if (!cached) {
+						this._zone.runOutsideAngular(() => {
+							this.execute_vfr(method, tmp, vfrOptions)
+									.then((res) => {
+										this.log.debug('Result: ', res);
+										resolve(res);
+										if (cache) this.cache.insertItem(method, res);
+										this.runAfterHook(null, res);
+									}, (reason) => {
+										this.log.error(reason);
+										reject(reason);
+										this.runAfterHook(reason, null);
+									})
+									.then(() => {
+										this._zone.run(() => {});
+									});
+						});
+					}
 				} else {
 					let reason = 'Before hook failed';
 					reject(reason);
@@ -167,31 +203,6 @@ export class SalesforceService {
 					reject(reason);
 				});
 		});
-	}
-
-	public convertDate(date: string|number, dateTime: boolean = false): string|number {
-		if (this.useRest) {
-			if (dateTime) {
-				return moment(date).toISOString();
-			} else {
-				return moment(date).format('YYYY-MM-DD');
-			}
-		} else {
-			return moment(date).unix();
-		}
-	}
-
-	private processSobject(obj: ISObject) {
-		let nullables: string[] = [];
-		let tmp: ISObject = JSON.parse(JSON.stringify(obj));
-		for (let key in tmp) {
-			if (!tmp[key]) {
-				tmp[key] = undefined;
-				nullables.push(key);
-			}
-		}
-		tmp.fieldsToNull = nullables;
-		return tmp;
 	}
 
 	private execute_vfr(method: string, params: Array<any>, config?: RemotingOptions): Promise<any> {
@@ -233,6 +244,31 @@ export class SalesforceService {
 				reject('The requested method does not exist on ' + controller);
 			});
 		}
+	}
+
+	public convertDate(date: string|number, dateTime: boolean = false): string|number {
+		if (this.useRest) {
+			if (dateTime) {
+				return moment(date).toISOString();
+			} else {
+				return moment(date).format('YYYY-MM-DD');
+			}
+		} else {
+			return moment(date).unix();
+		}
+	}
+
+	private processSobject(obj: ISObject) {
+		let nullables: string[] = [];
+		let tmp: ISObject = JSON.parse(JSON.stringify(obj));
+		for (let key in tmp) {
+			if (!tmp[key]) {
+				tmp[key] = undefined;
+				nullables.push(key);
+			}
+		}
+		tmp.fieldsToNull = nullables;
+		return tmp;
 	}
 
 	private runBeforeHook(method: string, controller: string, params: Object, api: API): boolean {

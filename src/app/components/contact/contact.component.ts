@@ -56,7 +56,7 @@ export class ContactComponent implements OnInit {
 
     private getContactSalutations() {
         let id = this.contact.Id;
-        this.sfdc.execute('getContactSalutationsPicklist')
+        this.sfdc.execute('getContactSalutationsPicklist', {}, { cache: true })
             .then((res) => {
                 this.salutations = res[0];
             });

@@ -16,6 +16,7 @@ export class CreateContactComponent implements OnInit {
     private contact: IContact = {};
     private salutations: { [s: string]: string };
     private saving: boolean = false;
+    private loading: boolean = true;
     private error: string;
     
     constructor(private sfdc: SalesforceService, private log: LoggerService, private router: Router) {}
@@ -25,6 +26,7 @@ export class CreateContactComponent implements OnInit {
         this.sfdc.execute('getContactSalutationsPicklist')
             .then((res) => {
                 this.salutations = res[0];
+                this.loading = false;
             });
     }
 
