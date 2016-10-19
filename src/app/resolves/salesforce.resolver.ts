@@ -23,7 +23,7 @@ export class SalesforceResolver implements Resolve<any> {
                 observer.next(this.salesforceService);
                 observer.complete();
             } else if (sf.auth) {
-                this.salesforceService.authenticate(sf.auth.login_url, sf.auth.username, sf.auth.password)
+                this.salesforceService.authenticate(sf.auth.login_url, sf.auth.username, sf.auth.password, sf.auth.oauth2)
                     .then((res) => {
                         observer.next(this.salesforceService);
                         observer.complete();

@@ -20,8 +20,8 @@ app.all('/proxy/?*', jsforceAjaxProxy({ enableCORS: true }));
 // let credentials = {key: privateKey, cert: certificate};
 
 let server = http.createServer(app);
-server = server.listen(8080, function() {
-	console.log('http listening on port 8080')
+server = server.listen(8085, function() {
+	console.log('http listening on port 8085')
 });
 
 // let httpsServer = https.createServer(credentials, app);
