@@ -4,9 +4,8 @@
   "description": "Boilerplate for developing Angular 2 applications on salesforce that work locally",
   "main": "index.js",
   "scripts": {
-    "run": "gulp serve",
-    "watch": "gulp watch",
-    "serve:watch": "gulp serve:watch",
+    "serve": "gulp",
+    "watch": "gulp watch:all",
     "test": "protractor",
     "postinstall": "typings install"
   },
