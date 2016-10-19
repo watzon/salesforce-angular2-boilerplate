@@ -1,7 +1,7 @@
 {
   "name": "angular2-salesforce-boilerplate",
   "version": "0.6.2",
-  "description": "Boilderplate for developing Angular 2 applications on salesforce that work locally",
+  "description": "Boilerplate for developing Angular 2 applications on salesforce that work locally",
   "main": "index.js",
   "scripts": {
     "run": "gulp serve",
