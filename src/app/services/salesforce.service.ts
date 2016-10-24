@@ -275,12 +275,40 @@ export class SalesforceService {
 		if (!result) { return []; }
 		result = this.stripNamespace(result);
 		if (result.result) { result = result.result; }
-		return this.arrayify(result);
+		result = this.arrayify(result);
+		if (this.useRest) result = this.handleNestedQueries(result);
+		return result;
 	}
 
 	private arrayify(obj: any): Array<any> {
 		if (!Array.isArray(obj)) { return [obj]; }
 		else { return obj; }
+	}
+
+	private handleNestedQueries(objects: any[]) {
+		for (let i in objects) {
+			objects[i] = this.processNestedQuery(objects[i]);
+		}
+
+		return objects;
+	}
+
+	private processNestedQuery(obj: any) {
+		for (let key in obj) {
+			if (typeof obj[key] === 'object' && obj[key].hasOwnProperty('records') && obj[key].hasOwnProperty('size')) {
+				if (obj[key].size > 1) {
+					obj[key] = obj[key].records;
+				} else {
+					obj[key] = [obj[key].records];
+				}
+				// Recursively handles nested queries for all related objects
+				for (let relatedObject of obj[key]) {
+					this.handleNestedQueries(relatedObject);
+				}
+			}
+		}
+
+		return obj;
 	}
 
 	private normalizeType(val: any): any {
