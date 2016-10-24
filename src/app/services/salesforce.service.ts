@@ -75,9 +75,9 @@ export class SalesforceService {
 	 * @param  {Object} params      		- Parameters to pass to the APEX method as an object with
 	 * 							      		  the format `{ parameter_name: value }`
 	 * @param  {RemotingOptions} vfrOptions	- An object containing options to pass to the Visualforce
-	 * 										  remoting call. 
+	 * 										  remoting call.
 	 * @return {Promise<any>} 	 Returns a promise with the result or rejects with the
-	 * 						     remoting exception. 
+	 * 						     remoting exception.
 	 */
 	public execute(method: string, params?: Object, vfrOptions?: RemotingOptions): Promise<any> {
 		this.log.group('Executing method: ' + method, LOG_LEVEL.DEBUG);
@@ -87,9 +87,9 @@ export class SalesforceService {
 		let p: Promise<any> = new Promise((resolve, reject) => {
 			if (this.useRest) {
 				this.log.debug('Using REST API');
-				
+
 				let beforeHookResult = this.runBeforeHook(controller, method, params, API.REST);
-				
+
 				if (beforeHookResult) {
 
                     this._zone.runOutsideAngular(() => {
@@ -107,7 +107,7 @@ export class SalesforceService {
                                 this._zone.run(() => {});
                             });
                     });
-					
+
 				} else {
 					let reason = 'Before hook failed';
 					reject(reason);
@@ -154,14 +154,17 @@ export class SalesforceService {
 	}
 
 	public execute_rest(pkg: string, method: string, params: Object): Promise<any> {
-
 		for (let key in params) {
 			if (typeof(params[key]) === 'object' && !Array.isArray(params[key])) {
 				params[key] = this.processSobject(params[key]);
+			} else if (Array.isArray(params[key]) && params[key].length && typeof(params[key][0]) === 'object') {
+				for (let i in params[key]) {
+					params[key][i] = this.processSobject(params[key][i]);
+				}
 			}
 		}
 
-		return new Promise((resolve, reject) => {		
+		return new Promise((resolve, reject) => {
 			this.conn.execute(pkg, method, params, null)
 				.then((res) => {
 					res = this.parseResult(res);
@@ -215,13 +218,25 @@ export class SalesforceService {
 
 	public convertDate(date: string|number, dateTime: boolean = false): string|number {
 		if (this.useRest) {
-			if (dateTime) {
-				return moment(date).toISOString();
+			if (date) {
+				if (dateTime) {
+					return moment(date).toISOString();
+				} else {
+					return moment(date).format('YYYY-MM-DD');
+				}
 			} else {
-				return moment(date).format('YYYY-MM-DD');
+				return null;
 			}
+		} else if (date) {
+			return moment(date).valueOf();
 		} else {
-			return moment(date).unix();
+			// Sets date to the epoch if falsy value for checking in apex controller
+			/***** Example Controller Check *****
+			if (w.End_Time__c.getTime() == 0) {
+				w.End_Time__c = null;
+			}
+			************************************/
+			return 0;
 		}
 	}
 
@@ -230,7 +245,7 @@ export class SalesforceService {
 		let tmp: ISObject = JSON.parse(JSON.stringify(obj));
 		for (let key in tmp) {
 			if (!tmp[key]) {
-				tmp[key] = undefined;
+				delete tmp[key];
 				nullables.push(key);
 			}
 		}
@@ -408,7 +423,7 @@ export class SOQL {
 			conditions = builder.conditions,
 			limit = builder.limit,
 			order = undefined;
-		
+
 		if (builder.order && builder.order.field) {
 			order = 'ORDER BY ' + builder.order.field;
 			if (builder.order.direction) {
