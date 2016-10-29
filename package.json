@@ -1,6 +1,6 @@
 {
   "name": "angular2-salesforce-boilerplate",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "Boilerplate for developing Angular 2 applications on salesforce that work locally",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,7 @@
     "crypto-js": "^3.1.6",
     "jade": "^1.11.0",
     "jade-loader": "^0.8.0",
-    "jsforce": "iDev0urer/jsforce",
+    "jsforce": "github:iDev0urer/jsforce",
     "jsforce-ajax-proxy": "^1.0.0",
     "moment": "^2.14.1",
     "reflect-metadata": "^0.1.3",
@@ -39,7 +39,7 @@
     "@types/jasmine": "^2.2.33",
     "@types/lodash": "^4.14.34",
     "@types/moment": "^2.13.0",
-    "@types/node": "^6.0.38",
+    "@types/node": "^6.0.46",
     "del": "^2.2.2",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-archiver": "^1.0.0",

@@ -154,6 +154,7 @@ export class SalesforceService {
 	}
 
 	public execute_rest(pkg: string, method: string, params: Object): Promise<any> {
+		let self = this;
 
 		for (let key in params) {
 			if (typeof(params[key]) === 'object' && !Array.isArray(params[key])) {
@@ -161,8 +162,8 @@ export class SalesforceService {
 			}
 		}
 
-		return new Promise((resolve, reject) => {		
-			this.conn.execute(pkg, method, params, null)
+		return new Promise((resolve, reject) => {
+			self.conn.execute(pkg, method, params, null)
 				.then((res) => {
 					res = this.parseResult(res);
 					resolve(res);
