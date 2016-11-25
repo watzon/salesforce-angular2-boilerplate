@@ -9,10 +9,7 @@
         "experimentalDecorators": true,
         "removeComments": false,
         "noImplicitAny": false,
-        "rootDir": "src",
-		"typeRoots": [
-			"node_modules/@types"
-		]
+        "rootDir": "src"
     },
     "exclude": [
         "node_modules"
