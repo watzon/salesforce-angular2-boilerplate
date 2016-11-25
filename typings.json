@@ -1,6 +1,7 @@
 {
   "globalDependencies": {
-    "core-js": "registry:dt/core-js#0.0.0+20160725163759"
+    "core-js": "registry:dt/core-js#0.0.0+20160725163759",
+    "node": "registry:dt/node#6.0.0+20161110151007"
   },
   "dependencies": {
     "es6-promise": "registry:npm/es6-promise#3.0.0+20160723033700"

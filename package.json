@@ -20,8 +20,8 @@
     "@angular/platform-browser": "^2.2.3",
     "@angular/platform-browser-dynamic": "^2.2.3",
     "@angular/router": "^3.2.3",
+    "@types/node": "^6.0.51",
     "angular-in-memory-web-api": "~0.1.15",
-    "systemjs": "0.19.40",
     "core-js": "^2.4.1",
     "crypto-js": "^3.1.8",
     "jade": "^1.11.0",
@@ -32,7 +32,7 @@
     "reflect-metadata": "^0.1.8",
     "rxjs": "^5.0.0-beta.12",
     "systemjs": "0.19.27",
-    "zone.js": "^0.6.26"  
+    "zone.js": "^0.6.26"
   },
   "devDependencies": {
     "@types/core-js": "^0.9.32",
@@ -41,7 +41,7 @@
     "@types/jasmine": "^2.5.36",
     "@types/lodash": "^4.14.34",
     "@types/moment": "^2.13.0",
-    "@types/node": "^6.0.46",
+    "@types/node": "^6.0.51",
     "@types/selenium-webdriver": "^2.53.33",
     "canonical-path": "0.0.2",
     "concurrently": "^3.1.0",
