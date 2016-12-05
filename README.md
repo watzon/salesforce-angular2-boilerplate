@@ -1,5 +1,7 @@
 # The Easier Way to Combine Salesforce and Angular 2
 
+**Notice:** I am putting development for this on hold for the time being as I just started a new job and have projects that need my attention. If anyone is interested in being added as a collaborator please let me know.
+
 This boilerplate, which is still largely unifinished, combines the powers of [Gulp](http://gulpjs.com/), [JSForce](http://jsforce.github.io), [Angular 2](http://angular.io), and [Salesforce](https://salesforce.com) and allows you to develop and test your Salesforce applications completely locally. Deploying is as easy as running `gulp` or you can be more specific and just `gulp deploy:classes`.
 
 ### Getting set up
