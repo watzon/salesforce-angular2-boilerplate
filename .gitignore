@@ -7,3 +7,4 @@ vendor/
 typings/
 *.sublime-workspace
 *.sublime-project
+.vscode

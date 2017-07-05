@@ -154,6 +154,7 @@ export class SalesforceService {
 	}
 
 	public execute_rest(pkg: string, method: string, params: Object): Promise<any> {
+
 		for (let key in params) {
 			if (typeof(params[key]) === 'object' && !Array.isArray(params[key])) {
 				params[key] = this.processSobject(params[key]);
